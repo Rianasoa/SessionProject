@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TheGossipProject</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+<!-- Bootstrap CDN link-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  </head>
+
+  <body>
+
+<!-- Définition de la navbar affichée sur toutes les pages-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="<%= root_path %>">Gossip Project</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="<%= root_path %>">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= contact_path %>">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= team_path %>">Team</a>
+          </li>
+        </ul>
+      </div>
+<!-- Bouton de connexion utilisateur ou de loggout -->
+      <% if !logged_in?%>
+      <div class="btn-group">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          S'inscrire / Se connecter 
+        </button>
+        <div class="dropdown-menu">
+          <%= form_tag url_for(action: 'create', controller: 'sessions'), method: "post", :class => '' do %>
+            <div class="form-group w-90 container">
+              <%= label_tag 'E-mail :',nil, class: '' %>
+              <%= text_field_tag 'session[email]', nil ,class: 'ml-2 form-control w-40'%>
+            </div>
+            <div class="form-group w-90 container">
+              <%= label_tag 'Password :',nil, class: '' %>
+              <%= password_field_tag 'session[password]', nil ,class: 'ml-2 form-control w-40'%>
+            </div>
+            <div class="form-group w-100 text-center">
+              <%= submit_tag "S'identifier", class: 'btn btn-success' %>
+            </div>
+          <% end %>
+
+        <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="<%= new_user_path %>">Nouveau?   S'inscrire</a>
+            <!--<a class="dropdown-item" href="#">Forgot password?</a> -->
+        </div>
+      </div>
+      <% else%>
+      <div class="btn-group">
+        <a class="btn btn-info mr-1" href="<%= index_logged_path(User.first.first_name) %>" role="button">Mes informations</a>
+        <%= link_to "Déconnexion", session_path(session.id), method: :delete, :class => 'btn btn-outline-info btn-sm ml-1' %>
+      </div>
+      <% end%>
+    </nav>
+
+<% if success.present? %>
+      <p class="alert alert-success"><%= success %></p>
+<% end %>
+<% if danger.present? %>
+      <p class="alert alert-danger"><%= danger %></p>
+<% end %>
+
+    <%= yield %>
+
+<!-- Bootstrap CDN link for JS-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

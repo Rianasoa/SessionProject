@@ -1,0 +1,145 @@
+
+<section class ="container mt-3">
+  <div class=" p-1 mt-1 bg-secondary text-white">
+      <div class="row text-left">
+
+      
+          <div class="col-2 pl-4" style= "height: 80px">
+              <img class="img-fluid img-thumbnail float-left mh-100" src="<%= Faker::LoremFlickr.grayscale_image %>" alt="user_img">
+          </div>
+          <div class="col-7 text-left pl-5">
+              <h3 class="section-title"> Bienvenue <%= @user_logged.last_name %> <%= @user_logged.first_name %> </h3>
+              <p class="section-subtitle"> Vos données personnelles </p>
+          </div>
+          <div class="col-3 text-right align-middle">
+            <a href="#gossiplist" class="btn btn-primary">Potins <span class="badge badge-light px-2"><%= @user_logged.gossips.count %><span></a>
+            <div class="text-right mt-1" >
+              <a href="#commentlist" class="btn btn-primary" style="height: 40px;width: 200px">Commentaires <span class="badge badge-light px-2"><%= @user_logged.comments.count %><span></a>
+            </div>
+          </div>
+
+      </div>
+  </div>
+
+  <table class="table table-hover my-2">
+    <thead>
+      <tr>
+        <th class="col-3" scope="col">#</th>
+        <th class="col-7" scope="col">Valeur</th>
+        <th class="col-2" scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">City</th>
+        <td ><%= @user_logged.city.city_name %></td>
+        <td><a class="btn btn-warning mx-2"> Modifier </a>
+      </tr>
+    <% @column_names.each do |col_name| %>
+      <tr>
+        <th scope="row"><%= col_name.capitalize.gsub("_"," ") %></th>
+        <td ><%= @user_logged[col_name] %></td>
+        <td>
+          <% modif_indentifier = ["id","created_at","updated_at"] %>
+          <% if !modif_indentifier.include?(col_name.to_s) %>
+            <a class="btn btn-warning mx-2"> Modifier </a>
+          <%end%>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</section> <!-- container-->
+
+<hr class="my-5">
+
+<section class ="container mt-5">
+<!-- Bandeau de section -->
+  <div class="  mt-2 text-white  bg-secondary mb-1">
+      <div class="row ">
+          <div class="col-10">
+              <h3 class="section-title text-center potin-list"> Liste de vos potins </h3>
+          </div>
+          <div class="col-2 text-right">
+            <a class="btn btn-success my-1" href="<%= new_gossip_path %>" role="button">créer un potin</a>
+          </div>
+      </div>
+  </div>
+<!-- Liste des potins-->
+  <div id = "gossiplist" class="row p-3">
+    <div class="col-4">
+      <div class="list-group" id="myList" role="tablist">
+        <% @gossips_by_user.each_with_index do |gossip,index|%>
+        <% my_href = "#gossip" + index.to_s %>
+          <% first_active ="list-group-item list-group-item-action" %>
+          <% first_active += " active" if index == 0 %>
+          <a class=" <%= first_active %> " data-toggle="list" href="<%= my_href %>" role="tab"><%= index + 1 %>. <%= gossip.title %></a>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-8 border">
+      <div class="tab-content pt-5">
+        <% @gossips_by_user.each_with_index do |gossip,index|%>
+          <% first_active ="tab-pane" %>
+          <% first_active += " active" if index == 0 %>
+          <% my_index = "gossip" + index.to_s %>
+          <div class="<%= first_active %>" id="<%= my_index %>" role="tabpanel">
+            <p> <%= gossip.content %></p>
+            <hr class="my-4">
+            <div class="text-right">
+              <p><small> modified <%= time_ago_in_words(gossip.updated_at, include_seconds: true) %> ago</small> </p>
+              <p> <a class="btn btn-warning mx-2" href="<%= edit_gossip_path(gossip.id) %>">Modifier</a>
+                <a class="btn btn-danger mx-2" href="<%= gossip_path(gossip.id) %>" data-confirm="Supression d'un potin ?" data-method="delete"> Supprimer </a></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div> <!-- row-->
+</section> <!-- container-->
+
+<hr class="my-5">
+
+<section class ="container mt-5">
+<!-- Bandeau de section -->
+  <div class="  mt-2 text-white  bg-secondary">
+      <div class="row text-left mb-1">
+          <div class="col-12">
+              <h3 class="section-title text-center potin-list"> Liste de vos commentaires </h3>
+          </div>
+      </div>
+  </div>
+<!-- Liste des potins-->
+  <div id = "commentlist" class="row">
+    <% @user_logged.comments.order(updated_at: :desc).each do |comment|%>
+      <div class="col-4">
+          <div class="card border-primary">
+            <div class="card-header "> 
+              <div class="justify-content-between align-items-center d-flex"> modified <%= time_ago_in_words(comment.gossip.updated_at, include_seconds: true) %> ago 
+            <span class="badge badge-primary badge-pill"><%=comment.gossip.comments.count %>  </span> </div>
+            </div>
+              <div class="card-body">
+                <h5 class="card-title"> <%=comment.gossip.title %></h5>
+                <p class="card-text text-secondary"> <%=comment.gossip.content %></p>
+                <p class="card-text"><small>
+                Create by : <a class="text-decoration-none" href="<%= user_path(comment.gossip.user.id) %>"><%= comment.gossip.user.first_name%> <%= comment.gossip.user.last_name%> </a>
+                from <a class="text-decoration-none" href="<%= city_path(comment.gossip.user.city.id) %>"><%= comment.gossip.user.city.city_name%></a>
+                </small></p> 
+                <a href="<%= gossip_path(comment.gossip.id) %>" class="btn btn-primary">Voir</a>
+              </div>
+            </div>
+      </div>
+      <div class="col-8 border-top border-bottom">
+          <p class="p-3 mb-2 bg-light text-dark font-italic"> You <%= time_ago_in_words(comment.updated_at, include_seconds: true) %> ago</p>
+          <p class="mt-3 p-3 text-info"> <%= comment.content%> </p>
+          <hr class="my-4">
+          <div class="text-right">
+            <p> <a class="btn btn-warning mx-2" href="<%= edit_comment_path(comment.id) %>">Modifier</a>
+              <a class="btn btn-danger mx-2" href="<%= comment_path(comment.id) %>" data-confirm="Supression d'un potin ?" data-method="delete"> Supprimer </a></p>
+          </div>
+      </div>
+    <% end%>
+  </div> <!-- row-->
+</section> <!-- container-->
+
+<p class="my-5">

@@ -1,0 +1,42 @@
+<!-- Bandeau d'alerte -->
+    <% if @comment.errors.any? %>
+      <div class="alert alert-danger" role="alert">
+        <p><small>Nous n'avons pas réussi à modifier le potin pour la (ou les) raison(s) suivante(s) :</small></p>
+        <ul><small>
+          <% @comment.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </small></ul>
+      </div>
+    <% end %>
+
+
+<section class ="container mt-3">
+
+<!-- Bandeau d'acceuil générique -->
+  <div class=" p-1 mt-1 bg-secondary text-white">
+      <div class="row text-center">
+          <div class="col-9 text-left pl-5">
+              <h3 class="section-title"> Formulaire de modification d'un commentaire </h3>
+          </div>
+      </div>
+  </div>
+
+<!-- Formulaire -->
+    <%= form_tag url_for(action: 'update'), method: "put",  :class => 'form-block' do %>
+      <br /> <br />
+      <div class = "border border-info rounded p-3">
+        <div class ="d-inline-flex">
+          <p class ="font-weight-bold border-bottom"> Titre :<p> 
+          <p class ="pl-2">" <%= @comment.gossip.title %> "</p>
+          <p class ="pl-2"> by <%=@comment.gossip.user.first_name %></p>
+        </div>
+        <p class ="pl-0"> <%= @comment.gossip.content%> </p>
+      </div>
+      <br /> <br />
+      <%= label_tag 'Votre commentaire',nil, class: 'font-weight-bold' %>
+      <%= text_area_tag 'new_comment[content]', @comment.content, class: 'ml-2 form-control w-50' %>
+      <%= submit_tag "Modifier le commentaire", class: 'btn btn-success mt-2 ml-2' %>
+    <% end %>
+
+</section>

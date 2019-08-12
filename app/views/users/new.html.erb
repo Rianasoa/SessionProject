@@ -1,0 +1,64 @@
+
+<!-- Bandeau d'alerte -->
+    <% if @user.errors.any? %>
+      <div class="alert alert-danger" role="alert">
+        <p><small>Nous n'avons pas réussi à créer votre compte utilisateur pour la (ou les) raison(s) suivante(s) :</small></p>
+        <ul><small>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </small></ul>
+      </div>
+    <% end %>
+
+
+<section class ="container mt-3">
+<!-- Bandeau d'acceuil générique -->
+  <div class=" p-1 mt-1 bg-secondary text-white">
+      <div class="row text-center">
+          <div class="col-9 text-left pl-5">
+              <h3 class="section-title"> Formulaire de création d'un compte utilisateur </h3>
+          </div>
+      </div>
+  </div>
+
+<!-- Formulaire -->
+<%= form_for @user, html: {class: 'form-horizontal'} do |f| %>
+  <div class="form-group">
+    <label> <%=f.label :first_name,'Votre prénom' %> </label>
+    <%=f.text_field :first_name, class:'form-control' %>
+  </div>
+  <div class="form-group">
+    <label> <%=f.label :last_name,'Votre nom ' %> </label>
+    <%=f.text_field :last_name, class:'form-control' %>
+  </div>
+  <div class="form-group">
+    <label> <%=f.label :email,'Votre e-mail' %> </label>
+    <%=f.email_field :email, class:'form-control' %>
+  </div>
+  <div class="form-group">
+    <label> <%=f.label :age, 'Votre âge' %> </label>
+    <%=f.text_field :age, class:'form-control' %>
+  </div>
+  <div class="form-group">
+    <label> <%=f.label :city_id, 'Lieu de résidence' %> </label>
+    <%=f.select(:city_id, @cities) %>
+  </div>
+  <div class="form-group">
+    <label> <%=f.label :description, 'Une petite bio ?' %> </label>
+    <%=f.text_area :description, class:'form-control' %>
+  </div>
+  <div class="form-group">
+    <label> <%=f.label :password, 'Password' %> </label>
+    <%=f.password_field :password, class:'form-control' %>
+  </div>
+  <div class="form-group">
+    <label> <%=f.label :password_confirmation,'Confirmer le password' %> </label>
+    <%=f.password_field :password_confirmation, class:'form-control' %>
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary"> Se connecter </button>
+  </div>
+<% end %>
+
+</section>

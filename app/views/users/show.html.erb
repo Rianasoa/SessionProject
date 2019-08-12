@@ -1,0 +1,66 @@
+
+<section class ="container mt-3">
+  <div class=" p-1 mt-1 bg-secondary text-white">
+      <div class="row text-left">
+          <div class="col-2 pl-4" style= "height: 80px">
+              <img class="img-fluid img-thumbnail float-left mh-100" src="<%= Faker::LoremFlickr.grayscale_image %>" alt="user_img">
+          </div>
+          <div class="col-7 text-left pl-5">
+              <h3 class="section-title"> Données concernant l'utilisateur <%= @user.last_name %> <%= @user.first_name %> </h3>
+              <p> inscription made <%= time_ago_in_words(@user.created_at, include_seconds: true) %> ago</p>
+          </div>
+          <div class="col-3 text-right align-middle">
+            <a href="#gossiplist" class="btn btn-primary">Potins <span class="badge badge-light px-2"><%= @user.gossips.count %><span></a>
+          </div>
+      </div>
+  </div>
+
+  <table class="table table-hover my-2">
+
+    <tbody>
+      <% @column_names.each do |col_name| %>
+        <tr>
+          <th scope="row col-3"><%=col_name.capitalize.gsub("_"," ") %></th>
+          <td class="col-9"><%= @user[col_name] %></td>
+        </tr>
+      <% end %>
+        <tr>
+          <th scope="row col-3">City name</th>
+          <td class="col-9"><a class="text-decoration-none" href="<%= city_path(@user.city.id) %>"><%= @user.city.city_name %></a></td>
+        </tr>
+    </tbody>
+  </table>
+
+</section>
+
+<section class="container">
+
+  <div class=" p-1 mt-5 bg-secondary text-white">
+      <div class="row text-left">
+          <div class="col-9 text-left pl-5">
+              <h3 class="section-title"> Ses potins </h3>
+          </div>
+          <div class="col-3 text-right align-middle">
+            <a href="#gossiplist" class="btn btn-primary">Potins <span class="badge badge-light px-2"><%= @user.gossips.count %><span></a>
+          </div>
+      </div>
+  </div>
+
+  <div id ="gossiplist" class="row">
+    <% @gossips_by_user.each do |gossip| %>
+      <div class="col-sm-4 py-md-2">
+          <div class="card border-primary">
+          <div class="card-header">modified <%= time_ago_in_words(gossip.updated_at, include_seconds: true) %> ago</div>
+            <div class="card-body">
+              <h5 class="card-title"> <%=gossip.title %> </h5>
+              <p class="card-text"><small>
+               Create by : <a class="text-decoration-none" href="<%= user_path(gossip.user.id) %>"><%= gossip.user.first_name%> <%= gossip.user.last_name%> </a>
+               from <a class="text-decoration-none" href="<%= city_path(gossip.user.city.id) %>"><%= gossip.user.city.city_name%></a>
+               </small></p> 
+              <a href="<%= gossip_path(gossip.id) %>" class="btn btn-primary">Voir</a>
+            </div>
+          </div>
+      </div>
+    <% end %>
+  </div>
+</section>

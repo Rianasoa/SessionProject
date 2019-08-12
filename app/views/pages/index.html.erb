@@ -1,0 +1,44 @@
+<!--
+  <% %>
+  <%= %>
+-->
+
+
+  <!-- Jumbotron d'acceuil -->
+  <div class="jumbotron">
+    <h1 class="display-4">Hello, world!</h1>
+    <p class="lead">Bienvenu sur le site des potins THP</p>
+    <hr class="my-4">
+    <p>La où les potins commencent l'amitié s'arrếte !</p>
+    <a class="btn btn-success btn-lg" href="<%= new_gossip_path %>" role="button">créer un potin</a>
+  </div>
+
+<div class="container">
+
+  <!-- Tous les potins en base en présentation card-->
+  <div class="row">
+    <% @gossips.each do |gossip| %>
+      <div class="col-sm-4 py-md-2">
+          <div class="card border-primary">
+          <div class="card-header row "> 
+            <div class="justify-content-between align-items-left d-flex col-8"> modified <%= time_ago_in_words(gossip.updated_at, include_seconds: true) %> ago </div>
+            <div class="col-4">
+              <span class="badge badge-primary badge-pill">💌<%=gossip.comments.count %>  </span> 
+              <span class="badge badge-secondary badge-pill">#<%=gossip.tags.count %>  </span>
+            </div>
+          </div>
+            <div class="card-body">
+              <h5 class="card-title"> <%=gossip.title %></h5>
+               <p class="card-text"><small>
+               Create by : <a class="text-decoration-none" href="<%= user_path(gossip.user.id) %>"><%= gossip.user.first_name%> <%= gossip.user.last_name%> </a>
+               from <a class="text-decoration-none" href="<%= city_path(gossip.user.city.id) %>"><%= gossip.user.city.city_name%></a>
+               </small></p> 
+              <a href="<%= gossip_path(gossip.id) %>" class="btn btn-primary">Voir</a>
+            </div>
+          </div>
+      </div>
+    <% end %>
+  </div>
+
+</div> 
+

@@ -1,0 +1,65 @@
+
+<section class ="container mt-3">
+  <div class=" p-1 mt-1 bg-secondary text-white">
+      <div class="row text-left">
+          <div class="col-9 text-left pl-5">
+              <h3 class="section-title"> <%= @city.users.count %> inscrits pour la ville <%= @city.city_name %> </h3>
+          </div>
+          <div class="col-3 text-right align-middle">
+            <a href="#gossiplist" class="btn btn-primary">Potins<span class="badge badge-light px-2"><%= @gossips_by_city.size %><span></a>
+          </div>
+      </div>
+  </div>
+
+  <table class="table table-hover my-2">
+    <thead>
+      <tr>
+        <th class="col-4" scope="col">Nom</th>
+        <th class="col-4" scope="col">Ancienneté</th>
+        <th class="col-4" scope="col">Potins</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users_by_city.each do |user| %>
+        <tr>
+          <td><a class="text-decoration-none" href="<%= user_path(user.id) %>"><%= user.last_name %> <%= user.first_name %></a></td>
+          <td><%= time_ago_in_words(user.created_at, include_seconds: true) %> </td>
+          <td><%= user.gossips.count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+</section>
+
+<section class="container">
+
+  <div class=" p-1 mt-5 bg-secondary text-white">
+      <div class="row text-left">
+          <div class="col-9 text-left pl-5">
+              <h3 class="section-title"> Les potins de la ville</h3>
+          </div>
+          <div class="col-3 text-right align-middle">
+            <a href="#gossiplist" class="btn btn-primary">Potins <span class="badge badge-light px-2"><%= @gossips_by_city.count %><span></a>
+          </div>
+      </div>
+  </div>
+
+  <div id ="gossiplist" class="row">
+    <% @gossips_by_city.each do |gossip| %>
+      <div class="col-sm-4 py-md-2">
+          <div class="card border-primary">
+          <div class="card-header">modified <%= time_ago_in_words(gossip.updated_at, include_seconds: true) %> ago</div>
+            <div class="card-body">
+              <h5 class="card-title"> <%=gossip.title %> </h5>
+              <p class="card-text"><small>
+               Create by : <a class="text-decoration-none" href="<%= user_path(gossip.user.id) %>"><%= gossip.user.first_name%> <%= gossip.user.last_name%> </a>
+               from <a class="text-decoration-none" href="<%= city_path(gossip.user.city.id) %>"><%= gossip.user.city.city_name%></a>
+               </small></p> 
+              <a href="<%= gossip_path(gossip.id) %>" class="btn btn-primary">Voir</a>
+            </div>
+          </div>
+      </div>
+    <% end %>
+  </div>
+</section>
